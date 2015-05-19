@@ -25,4 +25,4 @@ Typically this command would be run on a cron job every 15 minutes such as:
 > */15 * * * * java -cp ~ec2-user/gamelist-1.0-SNAPSHOT-jar-with-dependencies.jar com.newenglandvball.App ~ec2-user/gamelist.properties
 
 ##Future work
-The UI could certainly use some work as its just simple html written by hand with no js.  
+The UI could certainly use some work as its just simple html written by hand with no css or js.  
