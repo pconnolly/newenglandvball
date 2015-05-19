@@ -21,5 +21,8 @@ To run in production, change the properties file to
 
 This properties file has slightly different values, such as outputting to apache http server's default html folder and also showing matches for a shorter duration after they complete so it doesn't clutter the page.
 
+Typically this command would be run on a cron job every 15 minutes such as:
+> */15 * * * * java -cp ~ec2-user/gamelist-1.0-SNAPSHOT-jar-with-dependencies.jar com.newenglandvball.App ~ec2-user/gamelist.properties
+
 ##Future work
 The UI could certainly use some work as its just simple html written by hand with no js.  
