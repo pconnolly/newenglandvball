@@ -122,23 +122,30 @@ public class Parser {
         teamMatch.setTeam(team);
         
         if(teamMatch.getResult().endsWith("Won")){
-          int sets1 = 0;
-          int sets2 = 0;
-          try {
-            sets1 = Integer.parseInt(teamMatch.getScore().substring(0, 1));
-            sets2 = Integer.parseInt(teamMatch.getScore().substring(2, 3));
-          } catch(Exception e){
-            e.printStackTrace();
+          int leftTeamWins = 0;
+          int rightTeamWins = 0;
+          String[] sets = teamMatch.getScore().split(",");
+          for(int i = 0; i < sets.length; i++){
+            String setScore = sets[i].trim(); 
+            String[] scores = setScore.split("-");
+            if(scores.length != 2){
+              throw new RuntimeException("Expected 2 scores for a set: " + setScore + " for team " + teamMatch.getTeam().getTeamName());
+            }
+            if(Integer.parseInt(scores[0]) > Integer.parseInt(scores[1])){
+              leftTeamWins++;
+            } else {
+              rightTeamWins++;
+            }
           }
-          
+
           if(teamMatch.getResult().startsWith(team.getTeamName())){
             matchesWon++;
-            setsWon = setsWon + sets1;
+            setsWon = setsWon + leftTeamWins;
           } else {
-            setsWon = setsWon + sets2;
+            setsWon = setsWon + rightTeamWins;
           }
           matchesPlayed++;
-          setsPlayed = setsPlayed + sets1 + sets2;
+          setsPlayed = setsPlayed + leftTeamWins + rightTeamWins;
         }
         teamMatches.add(teamMatch);
       }
