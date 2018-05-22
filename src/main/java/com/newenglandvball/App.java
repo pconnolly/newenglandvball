@@ -55,10 +55,20 @@ public class App {
       } else {
         String scheduleString = teamMatch.getSchedule();
         String[] scheduleStrings = scheduleString.split("\\s"); 
-
-        String monthDayString = scheduleStrings[2];
-        String timeString = scheduleStrings[3];
-        String amPmString = scheduleStrings[4];
+    
+        String monthDayString = null;
+        String timeString     = null;
+        String amPmString     = null;
+        //Should use a regex here
+	if(scheduleStrings[0].startsWith("Ct.")){
+            monthDayString = scheduleStrings[2];
+            timeString = scheduleStrings[3];
+            amPmString = scheduleStrings[4];
+	} else {
+            monthDayString = scheduleStrings[3];
+            timeString = scheduleStrings[4];
+            amPmString = scheduleStrings[5];
+	}
 
         String dateString = monthDayString + "/" + CURRENT_YEAR + " " + timeString + " " + amPmString;
         DateFormat dateFormat = new SimpleDateFormat(TIME_DATE_FORMAT);
