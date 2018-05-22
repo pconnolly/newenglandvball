@@ -55,9 +55,10 @@ public class App {
       } else {
         String scheduleString = teamMatch.getSchedule();
         String[] scheduleStrings = scheduleString.split("\\s"); 
-        String monthDayString = scheduleStrings[3];
-        String timeString = scheduleStrings[4];
-        String amPmString = scheduleStrings[5];
+
+        String monthDayString = scheduleStrings[2];
+        String timeString = scheduleStrings[3];
+        String amPmString = scheduleStrings[4];
 
         String dateString = monthDayString + "/" + CURRENT_YEAR + " " + timeString + " " + amPmString;
         DateFormat dateFormat = new SimpleDateFormat(TIME_DATE_FORMAT);
