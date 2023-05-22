@@ -3,6 +3,12 @@ import json
 
 class TeamScraper:
 
+    def get_club_info(self, event_id, club_id):
+        club_url = f"https://results.advancedeventsystems.com/odata/{event_id}/standings(dId=null,cId={club_id},tIds=[])"
+        club_data = requests.get(club_url)
+        club_json = json.loads(club_data.text)
+        return club_json
+
     def get_all_team_matches(self, event_id, division_id, team_id):
         past_matches = self.get_team_past_matches(event_id, division_id, team_id)
         current_matches = self.get_team_current_matches(event_id, division_id, team_id)
@@ -74,7 +80,6 @@ class TeamScraper:
         score_text = ",".join(scores) 
 
         match_info = {}
-        match_info["current_team"] = current_team_name
         match_info["opponent"]     = opponent_team_name
         match_info["start_time"]   = scheduled_start_time
         match_info["court"]        = court_name
