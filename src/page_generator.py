@@ -1,11 +1,18 @@
+import json
+import pytz
 from datetime import datetime, timedelta
 import operator
 from tournament_scraper import TournamentScraper
 
 class PageGenerator:
 
+    def get_tournament_json(self):
+        with open("tournament.json", encoding="utf-8") as f:
+            tournament_data = f.read()
+            return json.loads(tournament_data)
+
     def generate_current_matches(self):
-        cutoff_time = datetime.now() - timedelta(hours = 40)
+        cutoff_time = datetime.now() - timedelta(hours = 60)
         cutoff_time_iso = cutoff_time.replace(microsecond=0).isoformat()
         #print("Cutoff time: " + cutoff_time_iso)
         tournament_scraper = TournamentScraper()
@@ -37,6 +44,9 @@ class PageGenerator:
         return filtered_tournament_matches
 
     def create_html(self, current_matches, file_name):
+        tournament_json = self.get_tournament_json()
+        tournament_timezone = tournament_json["timezone"]
+
         output_html = "<html>"
         output_html += "<meta http-equiv=\"Pragma\" content=\"no-cache\">"
         output_html += "<meta http-equiv=\"expires\" content=\"0\">"
@@ -53,11 +63,14 @@ class PageGenerator:
         output_html += "<td><b>Scores</b></td>"
         output_html += "</tr>"
 
-        bgcolor = "FFFFFF"
-        team_number = "blah"
-        event_id = "blah"
+        match_index = 0
         for current_match in current_matches:
-            output_html += "<tr bgcolor=\"" + bgcolor + "\">"
+            if (match_index % 2) == 0:
+                bg_color = "DFDFDF"
+            else: 
+                bg_color = "FFFFFF"
+
+            output_html += "<tr bgcolor=\"" + bg_color + "\">"
             output_html += "<td><a href=\"https://results.advancedeventsystems.com/odata/" + str(current_match["event_id"]) + "/standings(dId=null,cId=" + str(current_match["club_id"]) + ",tIds=[])\">" + current_match["team_name"] + "</a></td>"
             output_html += "<td>" + current_match["record"] + "</td>"
             output_html += "<td style=\"padding-left:5px\">" + current_match["start_time"] + "</td>"
@@ -68,8 +81,9 @@ class PageGenerator:
             output_html += "<td style=\"padding-left:5px\">" + current_match["winning_team"] + "</td>"
             output_html += "<td style=\"padding-left:5px\">" + current_match["scores"] + "</td>"
             output_html += "</tr>"
+            match_index += 1
 
-        current_time = datetime.now().replace(microsecond=0).isoformat()
+        current_time = datetime.now().replace(microsecond=0).astimezone(pytz.timezone(tournament_timezone)).isoformat()
         output_html += "</table>"
         output_html += "<br />uno, dos, tres, nacho<br />"
         output_html += "<br />Last updated at: " + current_time

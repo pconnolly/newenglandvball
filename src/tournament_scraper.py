@@ -19,7 +19,6 @@ class TournamentScraper:
             club_info = team_scraper.get_club_info(event_id, club_id)
             club_info_values = club_info["value"]
             for club_info_value in club_info_values:
-                print("club_info_value " + str(club_info_value))
                 team_id = club_info_value["TeamId"]
                 division = club_info_value["Division"]
                 division_id = division["DivisionId"]
