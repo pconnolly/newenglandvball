@@ -75,7 +75,10 @@ class PageGenerator:
             output_html += "<td><a href=\"https://results.advancedeventsystems.com/odata/" + str(current_match["event_id"]) + "/standings(dId=null,cId=" + str(current_match["club_id"]) + ",tIds=[])\">" + current_match["team_name"] + "</a></td>"
             output_html += "<td>" + current_match["record"] + "</td>"
             output_html += "<td style=\"padding-left:5px\">" + current_match["start_time"] + "</td>"
-            output_html += "<td style=\"padding-left:5px\">" + current_match["court"] + "</td>"
+            if current_match["video_link"] is not None:
+                output_html += "<td style=\"padding-left:5px\"><a href=\"" + current_match["video_link"] + "\">" + current_match["court"] + "</td>"
+            else:
+                output_html += "<td style=\"padding-left:5px\">" + current_match["court"] + "</td>"
             output_html += "<td style=\"padding-left:5px\">" + current_match["division_name"] + "</td>"
             output_html += "<td style=\"padding-left:5px\">" + current_match["opponent"] + "</td>"
             output_html += "<td style=\"padding-left:5px\">" + current_match["match_name"] + "</td>"
