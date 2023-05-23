@@ -1,3 +1,4 @@
+import boto3
 import json
 import pytz
 from datetime import datetime, timedelta
@@ -83,7 +84,8 @@ class PageGenerator:
             output_html += "</tr>"
             match_index += 1
 
-        current_time = datetime.now().replace(microsecond=0).astimezone(pytz.timezone(tournament_timezone)).isoformat()
+        current_time = datetime.now().replace(microsecond=0).astimezone(pytz.timezone(tournament_timezone)) \
+                .strftime("%a %b %d %Y %I:%M:%S%p %Z")
         output_html += "</table>"
         output_html += "<br />uno, dos, tres, nacho<br />"
         output_html += "<br />Last updated at: " + current_time
@@ -92,9 +94,10 @@ class PageGenerator:
 
 
 
-file_name = "./matches.html"
+bucket = "newenglandvball"
+file_name = "matches.html"
 page_generator = PageGenerator()
 current_matches = page_generator.generate_current_matches()
 output_html = page_generator.create_html(current_matches, file_name)
-with open(file_name, "w", encoding="utf-8") as f:
-    f.write(output_html)
+s3_client = boto3.client('s3')
+response = s3_client.put_object(Key=file_name, Bucket=bucket, Body=output_html.encode('ascii'), ContentType='text/html', ACL='public-read')
