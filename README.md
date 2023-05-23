@@ -13,5 +13,5 @@ Then run the script
 python page_generator.py
 
 Typically this command would be run on a cron job every 15 minutes such as:
-> */15 * * * * python /home/user/newenglandvball/page_generator.py
+> */15 * * * * cd /home/user/newenglandvball/; python page_generator.py
 
