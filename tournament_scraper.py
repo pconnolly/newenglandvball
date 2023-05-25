@@ -27,6 +27,8 @@ class TournamentScraper:
                 team_dict = {}
                 team_dict["event_id"] = event_id
                 team_dict["club_id"] = club_id
+                team_dict["team_id"] = team_id
+                team_dict["division_id"] = division_id
                 team_dict["team_name"] = club_info_value["TeamName"]
                 team_dict["matches_won"] = club_info_value["MatchesWon"]
                 team_dict["matches_lost"] = club_info_value["MatchesLost"]

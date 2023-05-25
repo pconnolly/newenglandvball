@@ -26,6 +26,8 @@ class PageGenerator:
                 display_match = {}
                 display_match["event_id"]      = team["event_id"]
                 display_match["club_id"]       = team["club_id"]
+                display_match["team_id"]       = team["team_id"]
+                display_match["division_id"]   = team["division_id"]
                 display_match["team_name"]     = team["team_name"]
                 display_match["record"]        = str(team["matches_won"]) + "-" + str(team["matches_lost"])
                 display_match["division_name"] = team["division_name"]
@@ -72,13 +74,14 @@ class PageGenerator:
                 bg_color = "FFFFFF"
 
             output_html += "<tr bgcolor=\"" + bg_color + "\">"
-            output_html += "<td><a href=\"https://results.advancedeventsystems.com/odata/" + str(current_match["event_id"]) + "/standings(dId=null,cId=" + str(current_match["club_id"]) + ",tIds=[])\">" + current_match["team_name"] + "</a></td>"
+            #output_html += "<td><a href=\"https://results.advancedeventsystems.com/odata/" + str(current_match["event_id"]) + "/standings(dId=null,cId=" + str(current_match["club_id"]) + ",tIds=[])\">" + current_match["team_name"] + "</a></td>"
+            output_html += "<td>" + current_match["team_name"] + "</td>"
             output_html += "<td>" + current_match["record"] + "</td>"
             output_html += "<td style=\"padding-left:5px\">" + current_match["start_time"] + "</td>"
-            if current_match["video_link"] is not None:
-                output_html += "<td style=\"padding-left:5px\"><a href=\"" + current_match["video_link"] + "\">" + current_match["court"] + "</td>"
-            else:
-                output_html += "<td style=\"padding-left:5px\">" + current_match["court"] + "</td>"
+            #if current_match["video_link"] is not None:
+            #    output_html += "<td style=\"padding-left:5px\"><a href=\"" + current_match["video_link"] + "\">" + current_match["court"] + "</td>"
+            #else:
+            output_html += "<td style=\"padding-left:5px\">" + current_match["court"] + "</td>"
             output_html += "<td style=\"padding-left:5px\">" + current_match["division_name"] + "</td>"
             output_html += "<td style=\"padding-left:5px\">" + current_match["opponent"] + "</td>"
             output_html += "<td style=\"padding-left:5px\">" + current_match["match_name"] + "</td>"
@@ -103,4 +106,4 @@ page_generator = PageGenerator()
 current_matches = page_generator.generate_current_matches()
 output_html = page_generator.create_html(current_matches, file_name)
 s3_client = boto3.client('s3')
-response = s3_client.put_object(Key=file_name, Bucket=bucket, Body=output_html.encode('ascii'), ContentType='text/html', ACL='public-read')
+response = s3_client.put_object(Key=file_name, Bucket=bucket, Body=output_html.encode('utf-8'), ContentType='text/html', ACL='public-read')
