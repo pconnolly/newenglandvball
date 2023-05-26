@@ -51,39 +51,40 @@ class PageGenerator:
         output_html = "<html>"
         output_html += "<meta http-equiv=\"Pragma\" content=\"no-cache\">"
         output_html += "<meta http-equiv=\"expires\" content=\"0\">"
-        output_html += "<body style=\"font-family: Verdana,Arial,Helvetica,sans-serif;\"><table cellpadding=\"1\" cellspacing=\"0\" style=\"overflow-x: scroll; white-space: nowrap; \">"
+        output_html += "<body style=\"font-family: Verdana,Arial,Helvetica,sans-serif;\"><table cellpadding=\"1\" cellspacing=\"0\" style=\"overflow-x: scroll; white-space: nowrap; border: 1px solid #ccc;\">"
         output_html += "<tr align=\"center\">"
-        output_html += "<td><b>Team Name</b></td>"
-        output_html += "<td><b>Record</b></td>"
-        output_html += "<td><b>Start Time</b></td>"
-        output_html += "<td><b>Court</b></td>"
-        output_html += "<td><b>Division Name</b></td>"
-        output_html += "<td><b>Opponent</b></td>"
-        output_html += "<td><b>Match Name</b></td>"
-        output_html += "<td><b>Winning Team</b></td>"
-        output_html += "<td><b>Scores</b></td>"
+        output_html += "<td style=\"border: 1px solid #333333;\"><b>Team Name</b></td>"
+        output_html += "<td style=\"border: 1px solid #333333;\"><b>Record</b></td>"
+        output_html += "<td style=\"border: 1px solid #333333;\"><b>Start Time</b></td>"
+        output_html += "<td style=\"border: 1px solid #333333;\"><b>Court</b></td>"
+        output_html += "<td style=\"border: 1px solid #333333;\"><b>Division Name</b></td>"
+        output_html += "<td style=\"border: 1px solid #333333;\"><b>Opponent</b></td>"
+        output_html += "<td style=\"border: 1px solid #333333;\"><b>Match Name</b></td>"
+        output_html += "<td style=\"border: 1px solid #333333;\"><b>Winning Team</b></td>"
+        output_html += "<td style=\"border: 1px solid #333333;\"><b>Scores</b></td>"
         output_html += "</tr>"
 
         match_index = 0
         for current_match in current_matches:
+            start_time_formatted = datetime.strptime(current_match["start_time"], "%Y-%m-%dT%H:%M:%S").strftime("%m-%d %I:%M%p")
             if (match_index % 2) == 0:
                 bg_color = "DFDFDF"
             else: 
                 bg_color = "FFFFFF"
 
             output_html += "<tr bgcolor=\"" + bg_color + "\">"
-            output_html += "<td><a href=\"https://results.advancedeventsystems.com/odata/" + str(current_match["event_id"]) + "/standings(dId=null,cId=" + str(current_match["club_id"]) + ",tIds=[])\">" + current_match["team_name"] + "</a></td>"
-            output_html += "<td>" + current_match["record"] + "</td>"
-            output_html += "<td style=\"padding-left:5px\">" + current_match["start_time"] + "</td>"
+            output_html += "<td style=\"border: 1px solid #333333;\"><a href=\"https://results.advancedeventsystems.com/event/" + str(current_match["event_id"]) + "/clubs/" + str(current_match["club_id"]) + "/teams\">" + current_match["team_name"] + "</a></td>"
+            output_html += "<td style=\"border: 1px solid #333333;\">" + current_match["record"] + "</td>"
+            output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + start_time_formatted + "</td>"
             if current_match["video_link"] is not None:
-                output_html += "<td style=\"padding-left:5px\"><a href=\"" + current_match["video_link"] + "\">" + current_match["court"] + "</td>"
+                output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\"><a href=\"" + current_match["video_link"] + "\">" + current_match["court"] + "</td>"
             else:
-                output_html += "<td style=\"padding-left:5px\">" + current_match["court"] + "</td>"
-            output_html += "<td style=\"padding-left:5px\">" + current_match["division_name"] + "</td>"
-            output_html += "<td style=\"padding-left:5px\">" + current_match["opponent"] + "</td>"
-            output_html += "<td style=\"padding-left:5px\">" + current_match["match_name"] + "</td>"
-            output_html += "<td style=\"padding-left:5px\">" + current_match["winning_team"] + "</td>"
-            output_html += "<td style=\"padding-left:5px\">" + current_match["scores"] + "</td>"
+                output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + current_match["court"] + "</td>"
+            output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + current_match["division_name"] + "</td>"
+            output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + current_match["opponent"] + "</td>"
+            output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + current_match["match_name"] + "</td>"
+            output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + current_match["winning_team"] + "</td>"
+            output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + current_match["scores"] + "</td>"
             output_html += "</tr>"
             match_index += 1
 
@@ -103,4 +104,4 @@ page_generator = PageGenerator()
 current_matches = page_generator.generate_current_matches()
 output_html = page_generator.create_html(current_matches, file_name)
 s3_client = boto3.client('s3')
-response = s3_client.put_object(Key=file_name, Bucket=bucket, Body=output_html.encode('ascii'), ContentType='text/html', ACL='public-read')
+response = s3_client.put_object(Key=file_name, Bucket=bucket, Body=output_html.encode('utf-8'), ContentType='text/html', ACL='public-read')
