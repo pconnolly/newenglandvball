@@ -13,7 +13,7 @@ class PageGenerator:
             return json.loads(tournament_data)
 
     def generate_current_matches(self):
-        cutoff_time = datetime.now() - timedelta(hours = 60)
+        cutoff_time = datetime.now() - timedelta(hours = 8)
         cutoff_time_iso = cutoff_time.replace(microsecond=0).isoformat()
         #print("Cutoff time: " + cutoff_time_iso)
         tournament_scraper = TournamentScraper()
@@ -40,7 +40,7 @@ class PageGenerator:
         
         # We don't necessarily want to show every match since they may be old. Filter to upcoming matches
         filtered_tournament_matches = [filtered_match for filtered_match in tournament_matches if filtered_match['start_time'] >= cutoff_time_iso]
-        filtered_tournament_matches.sort(key=operator.itemgetter('start_time')) 
+        filtered_tournament_matches.sort(key=operator.itemgetter('start_time', 'team_name')) 
         #print("Sorted matches: " + str(filtered_tournament_matches))
         return filtered_tournament_matches
 
@@ -67,6 +67,7 @@ class PageGenerator:
         match_index = 0
         for current_match in current_matches:
             start_time_formatted = datetime.strptime(current_match["start_time"], "%Y-%m-%dT%H:%M:%S").strftime("%m-%d %I:%M%p")
+            display_opponent = '' if current_match['opponent'] is None else current_match['opponent']
             if (match_index % 2) == 0:
                 bg_color = "DFDFDF"
             else: 
@@ -81,7 +82,7 @@ class PageGenerator:
             else:
                 output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + current_match["court"] + "</td>"
             output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + current_match["division_name"] + "</td>"
-            output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + current_match["opponent"] + "</td>"
+            output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + display_opponent + "</td>"
             output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + current_match["match_name"] + "</td>"
             output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + current_match["winning_team"] + "</td>"
             output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + current_match["scores"] + "</td>"
@@ -104,4 +105,4 @@ page_generator = PageGenerator()
 current_matches = page_generator.generate_current_matches()
 output_html = page_generator.create_html(current_matches, file_name)
 s3_client = boto3.client('s3')
-response = s3_client.put_object(Key=file_name, Bucket=bucket, Body=output_html.encode('utf-8'), ContentType='text/html', ACL='public-read')
+response = s3_client.put_object(Key=file_name, Bucket=bucket, Body=output_html.encode('utf-8'), ContentType='text/html', ACL='public-read', CacheControl='no-cache', Expires='0')
