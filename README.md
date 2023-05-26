@@ -3,26 +3,15 @@ This code will read data from advancedeventsystems (aes), the website used by us
 This program will take data from the aes website and reformat it and output the upcoming schedule as an html file.  It is expected that this html file will be placed in a publicly accessible html folder.
 
 ##Prerequisites
-JDK 1.6 or greater
-
-Maven must be installed (https://maven.apache.org)
-
-##How to build
-mvn install
+Python 3 is installed with libraries: boto3, pytz
+AWS CLI has been installed and you have a valid credentials file
 
 ##How to run
-After you get the build running you can run it like this for local testing:
-> java -cp target/gamelist-1.0-SNAPSHOT-jar-with-dependencies.jar com.newenglandvball.App gamelist.properties
+First, modify tournament.json accordingly to update the event id from the AES website in addition to a listing of each club id from that tournament
 
-This will create a data folder with a file index.html.  You can then view this file in a browser.  
-
-To run in production, change the properties file to 
-> java -cp target/gamelist-1.0-SNAPSHOT-jar-with-dependencies.jar com.newenglandvball.App gamelist.properties.prod
-
-This properties file has slightly different values, such as outputting to apache http server's default html folder and also showing matches for a shorter duration after they complete so it doesn't clutter the page.
+Then run the script
+python page_generator.py
 
 Typically this command would be run on a cron job every 15 minutes such as:
-> */15 * * * * java -cp ~ec2-user/gamelist-1.0-SNAPSHOT-jar-with-dependencies.jar com.newenglandvball.App ~ec2-user/gamelist.properties
+> */15 * * * * cd /home/user/newenglandvball/; python page_generator.py
 
-##Future work
-The UI could certainly use some work as its just simple html written by hand with no css or js.  
