@@ -20,8 +20,12 @@ class TeamScraper:
         past_data = requests.get(past_url)
         past_json = json.loads(past_data.text)
         for play_and_match_data in past_json:
+            if play_and_match_data["Play"] is not None:
+                bracket = play_and_match_data["Play"]["FullName"]
+
             match_json = play_and_match_data["Match"]
             match_info = self.parse_team_match(team_id, match_json)
+            match_info["bracket"] = bracket 
             past_matches.append(match_info)
         return past_matches
 
@@ -30,12 +34,17 @@ class TeamScraper:
         current_url = f"https://results.advancedeventsystems.com/api/event/{event_id}/division/{division_id}/team/{team_id}/schedule/current"
         current_data = requests.get(current_url)
         current_json = json.loads(current_data.text)
-        
+
         # There should only be one team since we requested a team page
         for team_current in current_json:
+            if team_current["Play"] is not None:
+                bracket = team_current["Play"]["FullName"]
+
             for match_json in team_current["Matches"]:
                 match_info = self.parse_team_match(team_id, match_json)
+                match_info["bracket"] = bracket
                 current_matches.append(match_info)
+
         return current_matches
 
     def parse_team_match(self, team_id, match_json):

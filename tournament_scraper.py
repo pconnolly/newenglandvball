@@ -25,16 +25,17 @@ class TournamentScraper:
                 team_matches = team_scraper.get_all_team_matches(event_id=event_id, division_id=division_id, team_id=team_id)
 
                 team_dict = {}
-                team_dict["event_id"] = event_id
-                team_dict["club_id"] = club_id
-                team_dict["team_name"] = club_info_value["TeamName"]
-                team_dict["matches_won"] = club_info_value["MatchesWon"]
-                team_dict["matches_lost"] = club_info_value["MatchesLost"]
-                team_dict["sets_won"] = club_info_value["SetsWon"]
-                team_dict["sets_lost"] = club_info_value["SetsLost"]
-                team_dict["finish_text"] = club_info_value["FinishRankText"]
+                team_dict["event_id"]      = event_id
+                team_dict["club_id"]       = club_id
+                team_dict["team_id"]       = team_id
+                team_dict["team_name"]     = club_info_value["TeamName"]
+                team_dict["matches_won"]   = club_info_value["MatchesWon"]
+                team_dict["matches_lost"]  = club_info_value["MatchesLost"]
+                team_dict["sets_won"]      = club_info_value["SetsWon"]
+                team_dict["sets_lost"]     = club_info_value["SetsLost"]
+                team_dict["finish_text"]   = club_info_value["FinishRankText"]
                 team_dict["division_name"] = division["Name"]
-                team_dict["matches"] = team_matches
+                team_dict["matches"]       = team_matches
                 teams.append(team_dict) 
 
                 time.sleep(0.25) # Sleep so we don't kill the aes website

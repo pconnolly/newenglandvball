@@ -24,18 +24,19 @@ class PageGenerator:
         for team in tournament_teams:
             for team_match in team["matches"]: 
                 display_match = {}
-                display_match["event_id"]      = team["event_id"]
-                display_match["club_id"]       = team["club_id"]
-                display_match["team_name"]     = team["team_name"]
-                display_match["record"]        = str(team["matches_won"]) + "-" + str(team["matches_lost"])
-                display_match["division_name"] = team["division_name"]
-                display_match["opponent"]      = team_match["opponent"]
-                display_match["start_time"]    = team_match["start_time"]
-                display_match["court"]         = team_match["court"]
-                display_match["match_name"]    = team_match["match_name"]
-                display_match["video_link"]    = team_match["video_link"]
-                display_match["winning_team"]  = team_match["winning_team"]
-                display_match["scores"]        = team_match["scores"]
+                display_match["event_id"]        = team["event_id"]
+                display_match["club_id"]         = team["club_id"]
+                display_match["team_id"]         = team["team_id"]
+                display_match["team_name"]       = team["team_name"]
+                display_match["record"]          = str(team["matches_won"]) + "-" + str(team["matches_lost"])
+                display_match["division_name"]   = team["division_name"]
+                display_match["opponent"]        = team_match["opponent"]
+                display_match["start_time"]      = team_match["start_time"]
+                display_match["court"]           = team_match["court"]
+                display_match["bracket"]         = team_match["bracket"]
+                display_match["video_link"]      = team_match["video_link"]
+                display_match["winning_team"]    = team_match["winning_team"]
+                display_match["scores"]          = team_match["scores"]
                 tournament_matches.append(display_match)
         
         # We don't necessarily want to show every match since they may be old. Filter to upcoming matches
@@ -58,8 +59,8 @@ class PageGenerator:
         output_html += "<td style=\"border: 1px solid #333333;\"><b>Start Time</b></td>"
         output_html += "<td style=\"border: 1px solid #333333;\"><b>Court</b></td>"
         output_html += "<td style=\"border: 1px solid #333333;\"><b>Division Name</b></td>"
+        output_html += "<td style=\"border: 1px solid #333333;\"><b>Bracket</b></td>"
         output_html += "<td style=\"border: 1px solid #333333;\"><b>Opponent</b></td>"
-        output_html += "<td style=\"border: 1px solid #333333;\"><b>Match Name</b></td>"
         output_html += "<td style=\"border: 1px solid #333333;\"><b>Winning Team</b></td>"
         output_html += "<td style=\"border: 1px solid #333333;\"><b>Scores</b></td>"
         output_html += "</tr>"
@@ -74,7 +75,7 @@ class PageGenerator:
                 bg_color = "FFFFFF"
 
             output_html += "<tr bgcolor=\"" + bg_color + "\">"
-            output_html += "<td style=\"border: 1px solid #333333;\"><a href=\"https://results.advancedeventsystems.com/event/" + str(current_match["event_id"]) + "/clubs/" + str(current_match["club_id"]) + "/teams\">" + current_match["team_name"] + "</a></td>"
+            output_html += "<td style=\"border: 1px solid #333333;\"><a href=\"https://results.advancedeventsystems.com/event/" + str(current_match["event_id"]) + "/clubs/" + str(current_match["club_id"]) + "/teams/" + str(current_match["team_id"]) + "\">" + current_match["team_name"] + "</a></td>"
             output_html += "<td style=\"border: 1px solid #333333;\">" + current_match["record"] + "</td>"
             output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + start_time_formatted + "</td>"
             if current_match["video_link"] is not None:
@@ -82,8 +83,8 @@ class PageGenerator:
             else:
                 output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + current_match["court"] + "</td>"
             output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + current_match["division_name"] + "</td>"
+            output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + current_match["bracket"] + "</td>"
             output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + display_opponent + "</td>"
-            output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + current_match["match_name"] + "</td>"
             output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + current_match["winning_team"] + "</td>"
             output_html += "<td style=\"padding-left:5px; border: 1px solid #333333;\">" + current_match["scores"] + "</td>"
             output_html += "</tr>"
